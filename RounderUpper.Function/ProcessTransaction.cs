@@ -2,32 +2,22 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using RounderUpper.Function.Extensions;
 using RounderUpper.Function.Utilities;
 using RounderUpper.Function.Validators;
-using StarlingBank.Contracts.Common;
-using StarlingBank.Contracts.SavingsGoals;
 
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 namespace RounderUpper.Function
 {
     public static class ProcessTransaction
     {
-        private static readonly JsonMediaTypeFormatter Formatter = new JsonMediaTypeFormatter
-        {
-            SerializerSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            }
-        };
+        private static HttpClient _httpClient = InitHttpClient();
 
         [FunctionName("process-transaction")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")]string data, 
@@ -39,24 +29,20 @@ namespace RounderUpper.Function
                 return req.CreateResponse(HttpStatusCode.OK);
             }
 
-            var http = ProcessTransaction.GetHttpClient();
-
-#if !DEBUG
+//#if !DEBUG
             req.Headers.TryGetValues("X-Hook-Signature", out var headers);
             var sign = headers?.FirstOrDefault();
 
-            var secret = Environment.GetEnvironmentVariable("STARLING_WEBHOOK_SECRET", EnvironmentVariableTarget.Process);
+            var secret = EnvironmentExtensions.GetEnvString("STARLING_WEBHOOK_SECRET");
             var (_, valid) = WebhookPayloadValidator.Validate(sign, secret, data);
 
             if (!valid)
             {
                 log.Error("Webhook signature mismatch. Rejected.");
-
-                http.Dispose();
                 return req.CreateResponse(HttpStatusCode.OK);
             }
 
-#endif
+//#endif
 
             var payload = StarlingDeserialiser.WebhookPayload(data);
 
@@ -64,40 +50,25 @@ namespace RounderUpper.Function
             if (existing != null)
             {
                 log.Warning($"Transaction {existing.RowKey} already processed on {existing.Timestamp}.");
-
-                http.Dispose();
                 return req.CreateResponse(HttpStatusCode.OK);
             }
 
-            var goalId = Environment.GetEnvironmentVariable("STARLING_GOAL_ID", EnvironmentVariableTarget.Process);
+            var goalId = EnvironmentExtensions.GetEnvString("STARLING_GOAL_ID");
             var amountInPennies = (long)(Math.Abs(payload.Content.Amount) * 100 % 100);
+            var minorUnits = 100 - amountInPennies;
 
-            var topUpRequest = new TopUpRequest
-            {
-                Amount = new CurrencyAndAmount
-                {
-                    Currency = "GBP",
-                    MinorUnits = 100 - amountInPennies
-                }
-            };
+            await _httpClient.SavingsGoalsAddMoney(goalId, minorUnits);
+            await table.SaveTransaction(payload.AccountHolderUid, payload.Content.TransactionUid, minorUnits);
 
-            await http.PutAsync($"v1/savings-goals/{goalId}/add-money/{Guid.NewGuid()}", topUpRequest, Formatter);
-            await table.SaveTransaction(payload.AccountHolderUid, payload.Content.TransactionUid,
-                topUpRequest.Amount.MinorUnits);
-
-            http.Dispose();
             return req.CreateResponse(HttpStatusCode.OK);
         }
 
-        private static HttpClient GetHttpClient()
+        private static HttpClient InitHttpClient()
         {
-            var baseAddress =
-                Environment.GetEnvironmentVariable("STARLING_BASE_URL", EnvironmentVariableTarget.Process);
+            var baseAddress = EnvironmentExtensions.GetEnvString("STARLING_BASE_URL");
+            var accessToken = EnvironmentExtensions.GetEnvString("STARLING_ACCESS_TOKEN");
 
-            var accessToken =
-                Environment.GetEnvironmentVariable("STARLING_ACCESS_TOKEN", EnvironmentVariableTarget.Process);
-
-            var http = new HttpClient
+            return new HttpClient
             {
                 BaseAddress = new Uri($"{baseAddress}"),
                 DefaultRequestHeaders =
@@ -109,8 +80,6 @@ namespace RounderUpper.Function
                     }
                 }
             };
-
-            return http;
         }
     }
 }
