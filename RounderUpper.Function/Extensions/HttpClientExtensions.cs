@@ -11,6 +11,13 @@ namespace RounderUpper.Function.Extensions
 {
     internal static class HttpClientExtensions
     {
+        /// <summary>
+        /// Extension method to simplify adding money to a savings goal.
+        /// </summary>
+        /// <param name="http"></param>
+        /// <param name="goalId"></param>
+        /// <param name="minorUnits"></param>
+        /// <returns></returns>
         public static Task<HttpResponseMessage> SavingsGoalsAddMoney(this HttpClient http, string goalId, long minorUnits)
         {
             var req = new TopUpRequest
@@ -22,7 +29,7 @@ namespace RounderUpper.Function.Extensions
                 }
             };
 
-            return http.StarlingPutAsync($"v1/savings-goals/{goalId}/add-money/{Guid.NewGuid()}", req);
+            return http.StarlingPutAsync($"/v1/savings-goals/{goalId}/add-money/{Guid.NewGuid()}", req);
         }
 
         private static Task<HttpResponseMessage> StarlingPutAsync<T>(this HttpClient http, string uri, T value)
