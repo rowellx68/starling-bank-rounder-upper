@@ -5,6 +5,11 @@ namespace RounderUpper.Function.Utilities
 {
     public static class StarlingDeserialiser
     {
+        /// <summary>
+        /// Deserialises the webhook payload.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public static TransactionPayload WebhookPayload(string json)
         {
             Guard.AgainstNullOrWhitespaceArgument(nameof(json), json);

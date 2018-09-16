@@ -24,18 +24,17 @@ At the beginning of September 2018, I started to round up the transactions manua
 |`STARLING_GOAL_ID` | string | dc040d7d-4ddf-48ea-85a6-853c514421a3 |
 |`STARLING_ACCESS_TOKEN` | string | llLXtLousnRadmfmN9LEqzq8LLPnW211DyfCrj1ANmxvaCacC0vN2doMA4D3raEY |
 |`STARLING_WEBHOOK_SECRET` | string | 5fbb03c9-e22b-486e-bc92-bf37cbfe3647 |
-|`STARLING_BASE_URL` | string | https://api.starlingbank.com/api |
+|`STARLING_BASE_URL` | string | https://api.starlingbank.com/api/ |
 
-> `ROUND_UP_THRESHOLD` is currently not in use. 
 
 ## Personal Access Tokens & Webhook Types
 
 For this to work, the following scopes are required:
 
- - `transaction:read`
- - `savings-goal:read`
- - `savings-goal-transfer:read`
- - `savings-goal-transfer:create`
+- `transaction:read`
+- `savings-goal:read`
+- `savings-goal-transfer:read`
+- `savings-goal-transfer:create`
 
 Webhook types required:
 

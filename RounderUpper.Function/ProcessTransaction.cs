@@ -54,11 +54,16 @@ namespace RounderUpper.Function
             }
 
             var goalId = EnvironmentExtensions.GetEnvString("STARLING_GOAL_ID");
-            var amountInPennies = (long)(Math.Abs(payload.Content.Amount) * 100 % 100);
-            var minorUnits = 100 - amountInPennies;
+            var remainder = (long)(Math.Abs(payload.Content.Amount) * 100 % 100);
+            var difference = 100 - remainder;
 
-            await _httpClient.SavingsGoalsAddMoney(goalId, minorUnits);
-            await table.SaveTransaction(payload.AccountHolderUid, payload.Content.TransactionUid, minorUnits);
+            var threshold = EnvironmentExtensions.GetEnvInt("ROUND_UP_THRESHOLD");
+            if (remainder >= threshold)
+            {
+                await _httpClient.SavingsGoalsAddMoney(goalId, difference);
+            }
+
+            await table.SaveTransaction(payload.AccountHolderUid, payload.Content.TransactionUid, difference);
 
             return req.CreateResponse(HttpStatusCode.OK);
         }
@@ -67,6 +72,9 @@ namespace RounderUpper.Function
         {
             var baseAddress = EnvironmentExtensions.GetEnvString("STARLING_BASE_URL");
             var accessToken = EnvironmentExtensions.GetEnvString("STARLING_ACCESS_TOKEN");
+
+            Guard.AgainstNullOrWhitespaceArgument(nameof(baseAddress), baseAddress);
+            Guard.AgainstNullOrWhitespaceArgument(nameof(accessToken), accessToken);
 
             return new HttpClient
             {

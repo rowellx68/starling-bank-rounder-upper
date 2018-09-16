@@ -16,9 +16,8 @@ namespace StarlingBank.Contracts.Webhook
         public Guid AccountHolderUid { get; set; }
 
         /// <summary>
-        /// String representation of the webhook event type.
+        /// String representation of the webhook event type. <see cref="WebhookTypes"/>
         /// </summary>
-        /// <see cref="WebhookTypes"/>
         public string WebhookType { get; set; }
 
         public Guid CustomerUid { get; set; }

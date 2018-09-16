@@ -5,7 +5,6 @@ namespace StarlingBank.Contracts.SavingsGoals
 {
     public class TopUpRequest
     {
-        [DataMember(Name = "amount")]
         public CurrencyAndAmount Amount { get; set; }
     }
 }
