@@ -29,7 +29,7 @@ namespace RounderUpper.Function
                 return req.CreateResponse(HttpStatusCode.OK);
             }
 
-//#if !DEBUG
+// #if !DEBUG
             req.Headers.TryGetValues("X-Hook-Signature", out var headers);
             var sign = headers?.FirstOrDefault();
 
@@ -41,8 +41,7 @@ namespace RounderUpper.Function
                 log.Error("Webhook signature mismatch. Rejected.");
                 return req.CreateResponse(HttpStatusCode.OK);
             }
-
-//#endif
+// #endif
 
             var payload = StarlingDeserialiser.WebhookPayload(data);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using RounderUpper.Function.Utilities;
 
 namespace RounderUpper.Function.Extensions
 {
@@ -11,6 +12,8 @@ namespace RounderUpper.Function.Extensions
         /// <returns></returns>
         public static string GetEnvString(string key)
         {
+            Guard.AgainstNullOrWhitespaceArgument(nameof(key), key);
+
             return Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.Process);
         }
 
@@ -21,6 +24,8 @@ namespace RounderUpper.Function.Extensions
         /// <returns></returns>
         public static int GetEnvInt(string key)
         {
+            Guard.AgainstNullOrWhitespaceArgument(nameof(key), key);
+
             var intString = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.Process);
             int.TryParse(intString, out var value);
 

@@ -1,5 +1,8 @@
 ﻿namespace StarlingBank.Contracts.Webhook
 {
+    /// <summary>
+    /// Starling Bank: Identifier of the webhook type that triggered the call.
+    /// </summary>
     public class WebhookTypes
     {
         public const string InterestCharge = "INTEREST_CHARGE";

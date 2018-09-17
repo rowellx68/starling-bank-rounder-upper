@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using RounderUpper.Function.Entities;
+using RounderUpper.Function.Utilities;
 
 namespace RounderUpper.Function.Extensions
 {
@@ -16,6 +17,11 @@ namespace RounderUpper.Function.Extensions
         /// <returns></returns>
         public static async Task<TransactionEntity> GetExistingTransaction(this CloudTable table, Guid accountHolderUid, Guid transactionUid)
         {
+            Guard.AgainstNullArgument(nameof(table), table);
+            Guard.AgainstDefaultValue(nameof(accountHolderUid), accountHolderUid);
+            Guard.AgainstDefaultValue(nameof(transactionUid), transactionUid);
+
+            // TODO: this could get expensive if we keep checking if the table exists
             await table.CreateIfNotExistsAsync();
 
             var operation = TableOperation.Retrieve<TransactionEntity>($"{accountHolderUid}", $"{transactionUid}");
@@ -34,7 +40,8 @@ namespace RounderUpper.Function.Extensions
         /// <returns></returns>
         public static async Task SaveTransaction(this CloudTable table, Guid accountHolderUid, Guid transactionUid, long amount)
         {
-            await table.CreateIfNotExistsAsync();
+            Guard.AgainstNullArgument(nameof(table), table);
+
             var entity = new TransactionEntity(accountHolderUid, transactionUid)
             {
                 Amount = amount

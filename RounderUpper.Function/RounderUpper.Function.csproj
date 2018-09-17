@@ -10,7 +10,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.14" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.21" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StarlingBank\StarlingBank.csproj" />

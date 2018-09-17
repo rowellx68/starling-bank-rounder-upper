@@ -73,6 +73,24 @@ namespace RounderUpper.Function.Utilities
             }
         }
 
+        [DebuggerStepThrough]
+        public static void AgainstDefaultValue<T>(string parameterName, T argument) where T : struct
+        {
+            var value = default(T);
+
+            if (argument.Equals(value))
+            {
+                throw new DefaultValueException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Argument {0} is equal to its default value {1}.",
+                        parameterName,
+                        value
+                    )
+                );
+            }
+        }
+
         #region CustomExceptions
 
         public class EmptyStringException : Exception
@@ -85,6 +103,13 @@ namespace RounderUpper.Function.Utilities
         public class WhitespaceException : Exception
         {
             public WhitespaceException(string message) : base(message)
+            {
+            }
+        }
+
+        public class DefaultValueException : Exception
+        {
+            public DefaultValueException(string message) : base(message)
             {
             }
         }

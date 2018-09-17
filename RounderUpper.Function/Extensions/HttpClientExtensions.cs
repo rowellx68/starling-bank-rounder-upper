@@ -21,6 +21,7 @@ namespace RounderUpper.Function.Extensions
         /// <returns></returns>
         public static Task<HttpResponseMessage> SavingsGoalsAddMoney(this HttpClient http, string goalId, long minorUnits)
         {
+            Guard.AgainstNullArgument(nameof(http), http);
             Guard.AgainstNullOrWhitespaceArgument(nameof(goalId), goalId);
 
             if (minorUnits < 0)

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using RounderUpper.Function.Utilities;
 
 namespace RounderUpper.Function.Validators
 {
-    internal static class WebhookPayloadValidator
+    public static class WebhookPayloadValidator
     {
         /// <summary>
         /// Validator for the webhook payload.
@@ -15,6 +16,10 @@ namespace RounderUpper.Function.Validators
         /// <returns></returns>
         public static (string computed, bool valid) Validate(string signature, string secret, string json)
         {
+            Guard.AgainstNullOrWhitespaceArgument(nameof(signature), signature);
+            Guard.AgainstNullOrWhitespaceArgument(nameof(secret), secret);
+            Guard.AgainstNullOrWhitespaceArgument(nameof(json), json);
+
             string computed;
             using (var sha = new SHA512Managed())
             {

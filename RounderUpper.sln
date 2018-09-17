@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RounderUpper.Function", "Ro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarlingBank", "StarlingBank\StarlingBank.csproj", "{64F0B55A-D175-4B88-BAC3-0CD6EEA4A9CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{048B4527-A7E9-473B-91B7-930357C909DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RounderUpper.Function.Tests", "tests\RounderUpper.Function.Tests\RounderUpper.Function.Tests.csproj", "{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{64F0B55A-D175-4B88-BAC3-0CD6EEA4A9CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64F0B55A-D175-4B88-BAC3-0CD6EEA4A9CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64F0B55A-D175-4B88-BAC3-0CD6EEA4A9CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3FD8F2AE-5D11-430A-8F81-C06CA7117C2B} = {048B4527-A7E9-473B-91B7-930357C909DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCC26C71-92ED-4B91-AAF6-9D1AFBD861C1}
